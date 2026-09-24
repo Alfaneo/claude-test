@@ -46,8 +46,10 @@ export default buildConfig({
   sharp,
   plugins: [
     // Vercel'de dosya sistemi kalıcı olmadığından görseller Vercel Blob'a yüklenir.
+    // clientUploads: dosya tarayıcıdan doğrudan Blob'a gider; Vercel'in 4,5 MB istek sınırına takılmaz.
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      clientUploads: true,
       collections: { media: true },
       token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
