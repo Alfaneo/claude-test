@@ -7,6 +7,8 @@ import { yazilariGetir } from '@/lib/veri'
 
 export const metadata = {
   title: 'Yazılar',
+  // Filtreli adresler (?sehir=...) aynı sayfanın kopyası sayılmasın diye.
+  alternates: { canonical: '/yazilar' },
   openGraph: paylasim({
     baslik: 'Fizyoterapi yazıları',
     aciklama: 'Fizyoterapistlerin yazdığı bilgilendirici içerikler.',

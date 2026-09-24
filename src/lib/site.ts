@@ -50,3 +50,9 @@ export function paylasim({
     images: [gorsel ?? { url: kartGorseli(baslik, ust), width: 1200, height: 630, alt: baslik }],
   }
 }
+
+/**
+ * Site arama motorlarında görünsün mü? Test aşamasında kapalı (noindex).
+ * Yayına alırken Vercel'de SITE_INDEKSLENSIN=true ortam değişkenini ekleyip yeniden deploy edin.
+ */
+export const indekslensin = () => process.env.SITE_INDEKSLENSIN === 'true'

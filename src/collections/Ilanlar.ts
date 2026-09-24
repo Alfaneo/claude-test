@@ -1,5 +1,6 @@
 import type { CollectionConfig, Where } from 'payload'
 
+import { seoAlanlari } from '@/fields/seo'
 import { slugField } from '@/fields/slug'
 import { ilanDurumu, varsayilanBitisTarihi, VARSAYILAN_ILAN_SURESI_GUN } from '@/lib/ilanSuresi'
 import { CALISMA_SEKILLERI, ILLER } from '@/lib/secenekler'
@@ -146,6 +147,7 @@ export const Ilanlar: CollectionConfig = {
       ],
     },
     slugField(),
+    seoAlanlari,
     {
       name: 'bitisTarihi',
       label: 'Bitiş tarihi',

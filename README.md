@@ -18,6 +18,14 @@ Ekran görüntüleri `ekran-goruntuleri/` klasöründe.
 - İlan silinmez, panelde **"Süre durumu: Süresi doldu"** olarak kalır. Tarihi ileri alıp kaydedince tekrar **Aktif** olur ve sitede görünür.
 - Vercel Cron her gece 03:00'te (UTC) `/api/ilanlar/suresi-dolanlari-kapat` adresini çağırır. Bu çağrı, süresi dolan ilanların paneldeki durumunu günceller (`vercel.json`). Adres sadece `CRON_SECRET` ile ya da panele giriş yapmış kullanıcıyla çalışır.
 
+## SEO ve arama motorları
+
+- Her sayfada başlık, açıklama, canonical ve paylaşım (Open Graph) etiketleri var. `/sitemap.xml` otomatik üretilir.
+- İlanlarda Google İş İlanları için **JobPosting**, yazılarda **Article** yapısal verisi var. Süresi dolan ilan `validThrough` sayesinde Google'dan da düşer.
+- Panelde her yazı ve ilanda isteğe bağlı **SEO başlığı / açıklaması** alanları var. Boş bırakılırsa başlık ve özet kullanılır.
+
+**Site şu an arama motorlarına kapalı (noindex).** Yayına açmak için Vercel'de `SITE_INDEKSLENSIN=true` ortam değişkenini ekleyip yeniden deploy edin. Bu değişkenle sayfalar `index, follow` olur ve robots.txt site haritasını gösterir. Kendi alan adınızı bağladıysanız `NEXT_PUBLIC_SITE_URL=https://alanadiniz.com` değişkenini de ekleyin.
+
 ## Yerelde çalıştırma
 
 Gereksinimler: Node.js 20 veya üstü, pnpm.
@@ -50,6 +58,7 @@ Yerelde veritabanı olarak bir SQLite dosyası kullanılır. Vercel'de dosya sis
    | `PAYLOAD_SECRET` | Uzun, rastgele bir değer |
    | `BLOB_READ_WRITE_TOKEN` | Vercel Blob'un eklediği değer |
    | `CRON_SECRET` | Uzun, rastgele bir değer (Vercel Cron bunu otomatik gönderir) |
+   | `SITE_INDEKSLENSIN` | Sadece yayına hazır olunca: `true` |
 
 4. Deploy edin. `vercel-build` betiği önce veritabanı tablolarını oluşturur (`payload migrate`), sonra siteyi derler.
 5. İlk yönetici hesabını `/admin` adresinden oluşturun. İsterseniz örnek içerik için, aynı ortam değişkenleriyle yerelde `pnpm seed` çalıştırın.

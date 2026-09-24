@@ -5,6 +5,8 @@ import { YaziKarti } from '@/components/YaziKarti'
 import { SITE } from '@/lib/site'
 import { ilanlariGetir, yazilariGetir } from '@/lib/veri'
 
+export const metadata = { alternates: { canonical: '/' } }
+
 export default async function AnaSayfa() {
   const [yazilar, ilanlar] = await Promise.all([yazilariGetir({ limit: 3 }), ilanlariGetir({ limit: 4 })])
 

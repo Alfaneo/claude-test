@@ -2,23 +2,63 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
+
 import { KalanGun, sehirAdi } from '@/components/IlanKarti'
+import { JsonLd } from '@/components/JsonLd'
 import { CALISMA_SEKILLERI, etiket } from '@/lib/secenekler'
-import { paylasim } from '@/lib/site'
+import { paylasim, siteAdresi } from '@/lib/site'
 import { ilanGetir, tarihYaz } from '@/lib/veri'
+import type { Ilanlar } from '@/payload-types'
 
 type Props = { params: Promise<{ slug: string }> }
+
+const CALISMA_TURU: Record<Ilanlar['calismaSekli'], string> = {
+  'tam-zamanli': 'FULL_TIME',
+  'yari-zamanli': 'PART_TIME',
+  serbest: 'CONTRACTOR',
+  staj: 'INTERN',
+}
+
+/** Google İş İlanları için schema.org JobPosting. validThrough sayesinde süresi dolan ilan Google'dan da düşer. */
+function isIlaniVerisi(ilan: Ilanlar) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: ilan.baslik,
+    description: convertLexicalToHTML({ data: ilan.aciklama }),
+    datePosted: ilan.createdAt,
+    validThrough: ilan.bitisTarihi,
+    employmentType: CALISMA_TURU[ilan.calismaSekli],
+    hiringOrganization: { '@type': 'Organization', name: ilan.kurum },
+    jobLocation: {
+      '@type': 'Place',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: ilan.ilce || sehirAdi(ilan.sehir),
+        addressRegion: sehirAdi(ilan.sehir),
+        addressCountry: 'TR',
+      },
+    },
+    url: `${siteAdresi()}/ilanlar/${ilan.slug}`,
+    ...(ilan.iletisim?.basvuruLinki ? { directApply: false } : {}),
+  }
+}
 
 export async function generateMetadata({ params }: Props) {
   const ilan = await ilanGetir((await params).slug)
   if (!ilan) return {}
   const yer = `${sehirAdi(ilan.sehir)}${ilan.ilce ? ` / ${ilan.ilce}` : ''}`
-  const aciklama = `${ilan.kurum} · ${yer} · ${etiket(CALISMA_SEKILLERI, ilan.calismaSekli)} · Son başvuru: ${tarihYaz(ilan.bitisTarihi)}`
+  const aciklama =
+    ilan.seo?.aciklama ||
+    `${ilan.kurum} · ${yer} · ${etiket(CALISMA_SEKILLERI, ilan.calismaSekli)} · Son başvuru: ${tarihYaz(ilan.bitisTarihi)}`
+  const baslik = ilan.seo?.baslik || `${ilan.baslik} · ${ilan.kurum}`
   return {
-    title: `${ilan.baslik} · ${ilan.kurum}`,
+    title: baslik,
     description: aciklama,
+    alternates: { canonical: `/ilanlar/${ilan.slug}` },
     openGraph: paylasim({
-      baslik: ilan.baslik,
+      baslik: ilan.seo?.baslik || ilan.baslik,
       aciklama,
       yol: `/ilanlar/${ilan.slug}`,
       ust: `${ilan.kurum} · ${yer}`,
@@ -35,6 +75,7 @@ export default async function IlanSayfasi({ params }: Props) {
 
   return (
     <article className="kap dar bolum">
+      <JsonLd veri={isIlaniVerisi(ilan)} />
       <Link href="/ilanlar" className="geri">
         ← Tüm ilanlar
       </Link>

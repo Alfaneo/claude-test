@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
 
-import { paylasim, SITE, siteAdresi } from '@/lib/site'
+import { indekslensin, paylasim, SITE, siteAdresi } from '@/lib/site'
 import './styles.css'
 
 // İçerik panelden değiştiği ve ilanların süresi dolduğu an sitede görünsün diye sayfalar her istekte üretilir.
@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   title: { default: `${SITE.ad} · ${SITE.slogan}`, template: `%s · ${SITE.ad}` },
   description: SITE.aciklama,
   openGraph: paylasim({ baslik: SITE.slogan, aciklama: SITE.aciklama, yol: '/' }),
+  robots: indekslensin() ? { index: true, follow: true } : { index: false, follow: false },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

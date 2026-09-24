@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { seoAlanlari } from '@/fields/seo'
 import { slugField } from '@/fields/slug'
 import { YAZI_KATEGORILERI } from '@/lib/secenekler'
 
@@ -46,6 +47,7 @@ export const Yazilar: CollectionConfig = {
       required: true,
     },
     slugField(),
+    seoAlanlari,
     {
       name: 'kategori',
       label: 'Kategori',

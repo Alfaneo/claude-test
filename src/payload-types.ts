@@ -152,6 +152,19 @@ export interface Yazilar {
    * Boş bırakırsanız başlıktan otomatik oluşturulur.
    */
   slug?: string | null;
+  /**
+   * Google sonuçlarında görünen başlık ve açıklama. Boş bırakırsanız otomatik doldurulur.
+   */
+  seo?: {
+    /**
+     * En fazla 60-70 karakter.
+     */
+    baslik?: string | null;
+    /**
+     * En fazla 150-160 karakter.
+     */
+    aciklama?: string | null;
+  };
   kategori: 'ortopedi' | 'norolojik' | 'sporcu-sagligi' | 'pediatrik' | 'genel-saglik';
   yazar?: string | null;
   yayinTarihi?: string | null;
@@ -332,6 +345,19 @@ export interface Ilanlar {
    */
   slug?: string | null;
   /**
+   * Google sonuçlarında görünen başlık ve açıklama. Boş bırakırsanız otomatik doldurulur.
+   */
+  seo?: {
+    /**
+     * En fazla 60-70 karakter.
+     */
+    baslik?: string | null;
+    /**
+     * En fazla 150-160 karakter.
+     */
+    aciklama?: string | null;
+  };
+  /**
    * Bu tarihte ilan sitede görünmez olur. Varsayılan: 30 gün sonrası. Tekrar yayına almak için tarihi ileri alın.
    */
   bitisTarihi: string;
@@ -462,6 +488,12 @@ export interface YazilarSelect<T extends boolean = true> {
   kapakGorseli?: T;
   icerik?: T;
   slug?: T;
+  seo?:
+    | T
+    | {
+        baslik?: T;
+        aciklama?: T;
+      };
   kategori?: T;
   yazar?: T;
   yayinTarihi?: T;
@@ -488,6 +520,12 @@ export interface IlanlarSelect<T extends boolean = true> {
         basvuruLinki?: T;
       };
   slug?: T;
+  seo?:
+    | T
+    | {
+        baslik?: T;
+        aciklama?: T;
+      };
   bitisTarihi?: T;
   durum?: T;
   updatedAt?: T;
