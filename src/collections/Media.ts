@@ -22,6 +22,14 @@ export const Media: CollectionConfig = {
     imageSizes: [
       { name: 'kart', width: 640, height: 400, position: 'centre' },
       { name: 'genis', width: 1400 },
+      // WhatsApp ve sosyal medya önizlemesi: 1200x630, küçük dosya boyutu için JPEG.
+      {
+        name: 'paylasim',
+        width: 1200,
+        height: 630,
+        position: 'centre',
+        formatOptions: { format: 'jpeg', options: { quality: 80 } },
+      },
     ],
   },
 }

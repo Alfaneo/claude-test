@@ -3,13 +3,26 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { etiket, YAZI_KATEGORILERI } from '@/lib/secenekler'
-import { gorsel, tarihYaz, yaziGetir } from '@/lib/veri'
+import { paylasim } from '@/lib/site'
+import { gorsel, paylasimGorseli, tarihYaz, yaziGetir } from '@/lib/veri'
 
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props) {
   const yazi = await yaziGetir((await params).slug)
-  return yazi ? { title: yazi.baslik, description: yazi.ozet } : {}
+  if (!yazi) return {}
+  return {
+    title: yazi.baslik,
+    description: yazi.ozet,
+    openGraph: paylasim({
+      baslik: yazi.baslik,
+      aciklama: yazi.ozet,
+      yol: `/yazilar/${yazi.slug}`,
+      gorsel: paylasimGorseli(yazi.kapakGorseli),
+      ust: etiket(YAZI_KATEGORILERI, yazi.kategori),
+      tur: 'article',
+    }),
+  }
 }
 
 export default async function YaziSayfasi({ params }: Props) {

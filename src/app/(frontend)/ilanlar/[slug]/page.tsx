@@ -4,13 +4,27 @@ import { notFound } from 'next/navigation'
 
 import { KalanGun, sehirAdi } from '@/components/IlanKarti'
 import { CALISMA_SEKILLERI, etiket } from '@/lib/secenekler'
+import { paylasim } from '@/lib/site'
 import { ilanGetir, tarihYaz } from '@/lib/veri'
 
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props) {
   const ilan = await ilanGetir((await params).slug)
-  return ilan ? { title: `${ilan.baslik} · ${ilan.kurum}` } : {}
+  if (!ilan) return {}
+  const yer = `${sehirAdi(ilan.sehir)}${ilan.ilce ? ` / ${ilan.ilce}` : ''}`
+  const aciklama = `${ilan.kurum} · ${yer} · ${etiket(CALISMA_SEKILLERI, ilan.calismaSekli)} · Son başvuru: ${tarihYaz(ilan.bitisTarihi)}`
+  return {
+    title: `${ilan.baslik} · ${ilan.kurum}`,
+    description: aciklama,
+    openGraph: paylasim({
+      baslik: ilan.baslik,
+      aciklama,
+      yol: `/ilanlar/${ilan.slug}`,
+      ust: `${ilan.kurum} · ${yer}`,
+      tur: 'article',
+    }),
+  }
 }
 
 export default async function IlanSayfasi({ params }: Props) {

@@ -1,9 +1,17 @@
 import { IlanKarti } from '@/components/IlanKarti'
 import { CALISMA_SEKILLERI, ILLER } from '@/lib/secenekler'
+import { paylasim } from '@/lib/site'
 import { slugify } from '@/lib/slugify'
 import { ilanlariGetir } from '@/lib/veri'
 
-export const metadata = { title: 'Fizyoterapist ilanları' }
+export const metadata = {
+  title: 'Fizyoterapist ilanları',
+  openGraph: paylasim({
+    baslik: 'Fizyoterapist ilanları',
+    aciklama: 'Türkiye genelinde güncel fizyoterapist iş ilanları.',
+    yol: '/ilanlar',
+  }),
+}
 
 export default async function IlanlarSayfasi({
   searchParams,

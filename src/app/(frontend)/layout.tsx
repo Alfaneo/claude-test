@@ -1,15 +1,18 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
 
-import { SITE } from '@/lib/site'
+import { paylasim, SITE, siteAdresi } from '@/lib/site'
 import './styles.css'
 
 // İçerik panelden değiştiği ve ilanların süresi dolduğu an sitede görünsün diye sayfalar her istekte üretilir.
 export const dynamic = 'force-dynamic'
 
-export const metadata = {
+export const metadata: Metadata = {
+  metadataBase: new URL(siteAdresi()),
   title: { default: `${SITE.ad} · ${SITE.slogan}`, template: `%s · ${SITE.ad}` },
   description: SITE.aciklama,
+  openGraph: paylasim({ baslik: SITE.slogan, aciklama: SITE.aciklama, yol: '/' }),
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

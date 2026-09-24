@@ -2,9 +2,17 @@ import Link from 'next/link'
 
 import { YaziKarti } from '@/components/YaziKarti'
 import { YAZI_KATEGORILERI } from '@/lib/secenekler'
+import { paylasim } from '@/lib/site'
 import { yazilariGetir } from '@/lib/veri'
 
-export const metadata = { title: 'Yazılar' }
+export const metadata = {
+  title: 'Yazılar',
+  openGraph: paylasim({
+    baslik: 'Fizyoterapi yazıları',
+    aciklama: 'Fizyoterapistlerin yazdığı bilgilendirici içerikler.',
+    yol: '/yazilar',
+  }),
+}
 
 export default async function YazilarSayfasi({
   searchParams,

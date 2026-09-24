@@ -72,3 +72,12 @@ export function gorsel(m: Yazilar['kapakGorseli'], boyut?: 'kart' | 'genis') {
 
 export const tarihYaz = (t?: string | null) =>
   t ? new Date(t).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
+
+/** Paylaşım önizlemesi için 1200x630 JPEG. Bu boyut eklenmeden önce yüklenen görsellerde yoktur. */
+export function paylasimGorseli(m: Yazilar['kapakGorseli']) {
+  if (!m || typeof m !== 'object') return null
+  const boyut = (m as Media).sizes?.paylasim
+  return boyut?.url
+    ? { url: boyut.url, width: boyut.width ?? 1200, height: boyut.height ?? 630, alt: (m as Media).alt }
+    : null
+}
